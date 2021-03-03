@@ -17,7 +17,7 @@ end
 begin
 	using Plots
 	using PlutoUI
-	plotly()
+	pyplot()
 end
 
 # ╔═╡ 92b265f8-7063-11eb-157c-8d7284cfe2b0
@@ -189,6 +189,71 @@ onmove({layerX: 130, layerY: 160})
 </script>
 """
 
+# ╔═╡ 35ab60a8-7a0e-11eb-1445-51409aa29336
+struct Foldable{C}
+    title::String
+    content::C
+end
+
+
+# ╔═╡ 3eb137f4-7a0e-11eb-2b5c-3947144d3cf2
+
+function Base.show(io, mime::MIME"text/html", fld::Foldable)
+    write(io,"<details><summary>$(fld.title)</summary><p>")
+    show(io, mime, fld.content)
+    write(io,"</p></details>")
+end
+
+# ╔═╡ 5a3a0e7e-7a0e-11eb-1325-25b8ace1f1d7
+Foldable("What is the gravitational acceleration?", md"Correct, it's ``\pi^2``.")
+
+# ╔═╡ 5af94ad2-7a0e-11eb-30dc-e32516f7f954
+Foldable("Some cool plot:", plot(0:0.1:10, x -> x^2,size=(400,300)))
+
+# ╔═╡ 9d29fc58-7a0e-11eb-333c-29ad638a6ad2
+html"""<details>
+    <summary> A secret </summary>
+    <p> Pluto is fun </p>
+</details>"""
+
+# ╔═╡ e23caf3e-7a0e-11eb-0508-df8e42361dd6
+struct TwoColumn{L, R}
+    left::L
+    right::R
+end
+
+# ╔═╡ fcce48b2-7a0e-11eb-3a6b-9fdf35997161
+function Base.show(io, mime::MIME"text/html", tc::TwoColumn)
+    write(io, """<div style="display: flex;"><div style="flex: 50%;">""")
+    show(io, mime, tc.left)
+    write(io, """</div><div style="flex: 50%;">""")
+    show(io, mime, tc.right)
+    write(io, """</div></div>""")
+end
+
+# ╔═╡ 08433b44-7a0f-11eb-3a6b-f9f15f9a9041
+TwoColumn(md"""
+	**Figure 1:**
+	Note the kink at ``x=0``! This is an abs() function taking the absolute value of a value. 
+	
+	Slider $(@bind scale Slider(0:0.01:1))
+	""", plot(-5:5, abs, xaxis=("x-axis"),yaxis=("y-axis")))
+
+# ╔═╡ 574692c0-7a11-11eb-3952-d360e6b3e927
+md"""# Plot Defaults"""
+
+# ╔═╡ f1838606-7a0f-11eb-333a-ab543ba49e14
+default(size=(400,400),
+    leg=false,
+    fmt=:svg,
+    framestyle=:box,
+    msw=0,
+    tickfont = font(12, "DejaVu Sans"),
+    guidefontsize=14)
+
+# ╔═╡ 85cf52cc-7aab-11eb-0868-595b3dc61f6d
+
+
 # ╔═╡ Cell order:
 # ╟─92b265f8-7063-11eb-157c-8d7284cfe2b0
 # ╟─15532314-7044-11eb-2e19-739874a39522
@@ -208,8 +273,19 @@ onmove({layerX: 130, layerY: 160})
 # ╟─4580feb0-7066-11eb-2236-4f6768a41125
 # ╟─a012fd58-7044-11eb-028f-15ecea4fa524
 # ╟─c08dcb08-7044-11eb-32ea-27b9e80c61cf
-# ╠═3d133936-7045-11eb-3824-012d5be12d51
+# ╟─3d133936-7045-11eb-3824-012d5be12d51
 # ╟─cddff81c-7044-11eb-3f8a-5939b189c7d9
 # ╟─d8e25d5e-7044-11eb-184d-a9de63d17799
 # ╠═8972f504-748a-11eb-1b7c-c5522c44ba62
-# ╠═8930cf2a-767f-11eb-33b4-299baa74df5d
+# ╟─8930cf2a-767f-11eb-33b4-299baa74df5d
+# ╟─35ab60a8-7a0e-11eb-1445-51409aa29336
+# ╟─3eb137f4-7a0e-11eb-2b5c-3947144d3cf2
+# ╟─5a3a0e7e-7a0e-11eb-1325-25b8ace1f1d7
+# ╠═5af94ad2-7a0e-11eb-30dc-e32516f7f954
+# ╟─9d29fc58-7a0e-11eb-333c-29ad638a6ad2
+# ╠═e23caf3e-7a0e-11eb-0508-df8e42361dd6
+# ╠═fcce48b2-7a0e-11eb-3a6b-9fdf35997161
+# ╟─08433b44-7a0f-11eb-3a6b-f9f15f9a9041
+# ╟─574692c0-7a11-11eb-3952-d360e6b3e927
+# ╠═f1838606-7a0f-11eb-333a-ab543ba49e14
+# ╠═85cf52cc-7aab-11eb-0868-595b3dc61f6d
